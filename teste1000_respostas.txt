@@ -8,4 +8,3 @@ Campus 7: 1100
 Campus 8: 1041
 Campus 9: 1704
 Campus 10: 1034
-

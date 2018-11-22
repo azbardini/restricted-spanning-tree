@@ -1,3 +1,7 @@
+#*****************************************************
+#Este algoritmo deve ser executado utilizando Python 3
+#*****************************************************
+
 from numpy import * 
 
 #----------------------------------------
@@ -75,26 +79,31 @@ def main():
     #Importando Dados:
     #----------------------------------------
     nrCampi = int(input())
-    #print("Numero de Campi: "+str(nrCampi))
+    #Para cada campi do arquivo, faz as seguintes operações:
     for campi in range(0, nrCampi):
-        #print("\nCampi "+str(campi))
+
+        #Encontra o número de dispositivos
         nrDispositivo = int(input())
-        #print("Numero de Dispositivos: "+str(nrDispositivo))
+
+        #Preenche a matriz de adjacencia dos cabos (arestas)
         matAdjacencia = []
         for dispositivo in range(0, nrDispositivo):
             matAdjacencia.append(input().split(' '))
+
+        #Transforma a matriz em numeros inteiros
         for i in range(0,nrDispositivo):
             for j in range(0,nrDispositivo):
                 matAdjacencia[i][j] = int(matAdjacencia[i][j])
-        #print("Matriz de adjacencia: ")
-        #print(matAdjacencia)
-
         nrLimitados = int(input())
-        #print("Numero de Limitados: "+str(nrLimitados))
+
+        #Encontra a quantidade de dispositivos limitados a uma única conexão
         listaLimitados = input().split(' ')
+
+        #Transforma a lista deles em numeros inteiros
         for i in range(0,nrLimitados):
             listaLimitados[i] = int(listaLimitados[i])
-        #print("Limitados: "+str(listaLimitados))
+
+        #Acumula o menor vertice de cada dispositivo limitado 
         soma = 0
         for limitado in listaLimitados:
             menor = 100000 
@@ -102,21 +111,29 @@ def main():
                 if vert < menor and limitado != i+1 and i+1 not in listaLimitados:
                     menor = vert
             soma += menor
+
+        #Remove da lista de adjacencia as linahs e colunas correspondentes 
+        #aos vertices limitados 
         listaLimitados.sort()
         for limitado in reversed(listaLimitados):
             matAdjacencia = delete(matAdjacencia, [limitado-1],0)
             matAdjacencia = delete(matAdjacencia, [limitado-1],1)
             nrDispositivo = nrDispositivo-1
 
-        #print("Matriz de adjacencia removida: ")
-        #print(matAdjacencia)
 #----------------------------------------
 #Chamando PRIM
 #----------------------------------------
-        #print("\nPrim Tree: ")
+
+        #Cria a instancia de Grafo
         g1 = Grafo(nrDispositivo)
+
+        #Seta o grafo como a matriz de adjacencia
         g1.grafo = matAdjacencia
+
+        #Chama a arvore PRIM para a lista de adjacencias
         prim = g1.primMST()
+
+        #Printa a soma resultante da PRIM com a resultante dos vertices limitados
         print("Campus " + str(campi+1) + ': ' + str(soma + prim))
 
 if __name__ == "__main__":
