@@ -1,44 +1,37 @@
-#*****************************************************
-#Este algoritmo deve ser executado utilizando Python 3
-#*****************************************************
+#************************ATENÇÃO*************************#
+#Esse algoritmo deve ser executado utilizando-se Python 3#
+#********************************************************#
 
-from numpy import * 
-
-#----------------------------------------
-#Classe grafo com algorritmo padrão de PRIM:
-#----------------------------------------
+#O algoritmo retorna o custo em arestas para 
+#o caminhamento em um grafo utilizando uma variante
+#do algoritmo de prim.
+#Em adição, são colocados os vertices que só poderiam 
+#ter uma conexão.
+#Dessa forma, o algoritmo retorna a quantidade minima de cabos
+#necessários no problema da reforma da universidade descrito 
+#no trabalho.
 
 class Grafo(): 
 
     def __init__(self, vertices): 
         self.V = vertices 
-        self.grafo = [[0 for column in range(vertices)]  
-                    for row in range(vertices)] 
-  
-    #soma e retorna
-    def getMSTSum(self, predecessor): 
-        #print ("Edge \tWeight")
-        total = 0
-        for i in range(1,self.V): 
-            total += self.grafo[i][predecessor[i]]
-        return total
-
-    #função que encontra o vertice de menor dinstancia, se ainda não
+       
+    #função que encontra o vertice de menor distancia, se ainda não
     #incluido na arvore de caminhos minimos
     def menorChave(self, chave, listaIncluidos): 
         min = 100000 
         for v in range(self.V): 
             if chave[v] < min and listaIncluidos[v] == False: 
                 min = chave[v] 
-                min_index = v 
-        return min_index 
+                menorIndice = v 
+        return menorIndice 
   
     # função que constroi e retorna a MST de um grafo em matriz de adjacencia 
-    def primMST(self): 
+    def prim(self): 
         
         #custo infinito nos vertices 
         chave = [100000] * self.V 
-        
+
         #anterior setado como ninguém
         predecessor = [None] * self.V 
         
@@ -59,19 +52,18 @@ class Grafo():
             #coloca o vertice de menor distancia na arvore de menores caminhos  
             listaIncluidos[u] = True
   
-            #atualiza a distancia dos vertices adjascentes ao escolhido,
-            #se a distancia atual é maior que a nova distancia e 
-            #o vertice não esta na arvore de menores caminhos  
+            #atualiza a distancia dos vertices adjascentes ao escolhido
             for v in range(self.V): 
-
-                # grafo[u][v] só é 0 em caso de não adjacencia 
-                # listaIncluidos[v] é falso pra vertices que não estão ainda na MST 
-                # só atualiza a chave se grafo[u][v] é menor que chave[v] 
                 if self.grafo[u][v] > 0 and listaIncluidos[v] == False and chave[v] > self.grafo[u][v]: 
                         chave[v] = self.grafo[u][v] 
                         predecessor[v] = u 
-        
-        return self.getMSTSum(predecessor)
+
+        #retorna a soma de todos os predecessores 
+        #da matriz de adjacencia
+        total = 0
+        for i in range(1,self.V): 
+            total += self.grafo[i][predecessor[i]]
+        return total
 
 def main():
 
@@ -116,13 +108,14 @@ def main():
         #aos vertices limitados 
         listaLimitados.sort()
         for limitado in reversed(listaLimitados):
-            matAdjacencia = delete(matAdjacencia, [limitado-1],0)
-            matAdjacencia = delete(matAdjacencia, [limitado-1],1)
+            #matAdjacencia = delete(matAdjacencia, [limitado-1],0)
+            #matAdjacencia = delete(matAdjacencia, [limitado-1],1)
+            #estruturas acima utilizam NUMPY, foi substituido por
+            #loops abaixo para só utilizar bibliotecas padrão.
+            matAdjacencia.pop(limitado-1)
+            for inst in matAdjacencia:
+                inst.pop(limitado-1)
             nrDispositivo = nrDispositivo-1
-
-#----------------------------------------
-#Chamando PRIM
-#----------------------------------------
 
         #Cria a instancia de Grafo
         g1 = Grafo(nrDispositivo)
@@ -131,7 +124,7 @@ def main():
         g1.grafo = matAdjacencia
 
         #Chama a arvore PRIM para a lista de adjacencias
-        prim = g1.primMST()
+        prim = g1.prim()
 
         #Printa a soma resultante da PRIM com a resultante dos vertices limitados
         print("Campus " + str(campi+1) + ': ' + str(soma + prim))
