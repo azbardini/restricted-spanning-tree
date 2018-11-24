@@ -28,21 +28,21 @@ class Grafo():
   
     # função que constroi e retorna a MST de um grafo em matriz de adjacencia 
     def prim(self): 
+
+        #predecessor setado como ninguém
+        predecessor = [None] * self.V 
         
         #custo infinito nos vertices 
         chave = [100000] * self.V 
 
-        #anterior setado como ninguém
-        predecessor = [None] * self.V 
-        
         #usa o vertice 0 de inicial
         chave[0] = 0
 
-        #esvazia lista de já verificados
-        listaIncluidos = [False] * self.V
-
         #seta a raiz com -1 no anterior
         predecessor[0] = -1 
+
+        #esvazia lista de já verificados
+        listaIncluidos = [False] * self.V
 
         for contador in range(self.V): 
   
